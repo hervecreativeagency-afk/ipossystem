@@ -1,0 +1,2 @@
+export function archiveBounds(period,day){if(period==='all')return null;const start=new Date(day+'T12:00:00+02:00');if(period==='weekly')start.setUTCDate(start.getUTCDate()-6);if(period==='monthly')start.setUTCDate(start.getUTCDate()-29);const from=new Intl.DateTimeFormat('sv-SE',{timeZone:'Africa/Lusaka'}).format(start);const end=new Date(day+'T00:00:00+02:00');end.setUTCDate(end.getUTCDate()+1);return{from:from+'T00:00:00+02:00',to:end.toISOString()}}
+export function archiveNet(sale){return Math.round((Number(sale.subtotal)-Number(sale.discount))*100)/100}
