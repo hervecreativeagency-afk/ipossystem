@@ -1,5 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.3';
-const origin='https://ipos-retail-frontend.jollywasp32.chatgpt.site';
+const origin='https://ipossystem.vercel.app';
 const headers={'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Access-Control-Allow-Methods':'POST, OPTIONS','Content-Type':'application/json'};
 const reply=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers});
 Deno.serve(async(req)=>{
