@@ -7,3 +7,6 @@ test('stock limits and empty cart',()=>{assert.throws(()=>validateCart([]));asse
 test('reject invalid discounts',()=>{assert.throws(()=>totals([product],26));assert.throws(()=>totals([product],-1));assert.throws(()=>totals([product],NaN));});
 test('payment covers total and cash funds change',()=>{assert.throws(()=>paymentRows('Cash',20,{},23.2));assert.throws(()=>paymentRows('Bank/Card',30,{},23.2));assert.equal(paymentRows('Cash',30,{},23.2)[0].amount,30);assert.equal(paymentRows('Mixed payment',0,{'Cash':10,'MTN Money':20},23.2).length,2);assert.throws(()=>paymentRows('Mixed payment',0,{'MTN Money':30},23.2));});
 test('round at cent precision',()=>assert.equal(totals([{...product,selling_price:.1,quantity:3,tax_rate:0}]).total,.3));
+
+test('all supported single payment methods record exact payment',()=>{for(const method of ['Cash','Airtel Money','MTN Money','Bank/Card'])assert.deepEqual(paymentRows(method,23.2,{},23.2),[{method,amount:23.2}]);});
+test('reject hidden invalid mixed amounts and missing payment',()=>{assert.throws(()=>paymentRows('Mixed payment',0,{'Cash':30,'MTN Money':-1},23.2));assert.throws(()=>paymentRows('Mixed payment',0,{'Cash':30,'Airtel Money':'bad'},23.2));assert.throws(()=>paymentRows('Cash','',{},0));assert.throws(()=>paymentRows('Unknown',25,{},23.2));});
