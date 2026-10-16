@@ -1,3 +1,4 @@
+import { t as tr } from './i18n';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Plus, X, RefreshCw, LoaderCircle, AlertCircle, Users, Wallet, Phone, Pencil, Receipt, Megaphone, Download } from 'lucide-react';
@@ -287,11 +288,11 @@ export function CustomerPicker({ auth, customers, value, onChange, disabled, cre
     try {
       const looksLikePhone = /^[+\d][\d\s-]{5,}$/.test(value.name.trim());
       const body = looksLikePhone ? { name: value.phone || value.name, phone: value.name } : { name: value.name, phone: value.phone };
-      if (looksLikePhone && !value.phone) throw Error('Type the customer\'s name, then their phone below.');
+      if (looksLikePhone && !value.phone) throw Error(tr("Type the customer's name, then their phone below."));
       const id = await api.saveCustomer(auth.membership.company_id, body);
       await customers.reload();
       onChange({ id, name: body.name.trim(), phone: (body.phone || '').trim() });
-      toast('Customer saved.');
+      toast(tr('Customer saved.'));
     } catch (e) { setError(msg(e)); }
     finally { setSaving(false); }
   }
@@ -301,18 +302,18 @@ export function CustomerPicker({ auth, customers, value, onChange, disabled, cre
       <div className="picked-customer">
         <div>
           <strong>{linked.name}</strong>
-          <small>{linked.phone || 'No phone'}{Number(linked.balance) > 0 ? ' · owes ' + money(linked.balance, currency) : ''}{linked.credit_limit != null ? ' · limit ' + money(linked.credit_limit, currency) : ''}</small>
-          {creditSelected && over && <small className="net-error">At or over their credit limit</small>}
+          <small>{linked.phone || tr('No phone')}{Number(linked.balance) > 0 ? ' · ' + tr('owes {amount}', { amount: money(linked.balance, currency) }) : ''}{linked.credit_limit != null ? ' · ' + tr('limit {amount}', { amount: money(linked.credit_limit, currency) }) : ''}</small>
+          {creditSelected && over && <small className="net-error">{tr('At or over their credit limit')}</small>}
         </div>
         <button type="button" aria-label="Remove customer from sale" disabled={disabled} onClick={() => onChange({ name: '', phone: '' })}><X size={16} /></button>
-        {onPayLater && <button type="button" className={'pay-later' + (payLaterActive ? ' active' : '')} disabled={disabled} onClick={onPayLater} aria-pressed={payLaterActive}><Wallet size={15} /> {payLaterActive ? 'Selling on credit' : 'Sell on credit (pay later)'}</button>}
+        {onPayLater && <button type="button" className={'pay-later' + (payLaterActive ? ' active' : '')} disabled={disabled} onClick={onPayLater} aria-pressed={payLaterActive}><Wallet size={15} /> {tr(payLaterActive ? 'Selling on credit' : 'Sell on credit (pay later)')}</button>}
       </div>
     );
   }
   return (
     <div className="customer-picker" ref={box}>
-      <label>Customer (optional)
-        <input maxLength={150} value={value.name} disabled={disabled} autoComplete="off" placeholder="Search name or phone, or type a new name"
+      <label>{tr('Customer (optional)')}
+        <input maxLength={150} value={value.name} disabled={disabled} autoComplete="off" placeholder={tr('Search name or phone, or type a new name')}
           onFocus={() => setOpen(true)} onChange={e => { onChange({ ...value, name: e.target.value }); setOpen(true); }}
           onKeyDown={e => { if (e.key === 'Escape') setOpen(false); if (e.key === 'Enter' && matches.length === 1) { e.preventDefault(); pick(matches[0]); } }} />
       </label>
@@ -320,18 +321,18 @@ export function CustomerPicker({ auth, customers, value, onChange, disabled, cre
         <ul className="picker-list" role="listbox">
           {matches.map(c => (
             <li key={c.id}><button type="button" role="option" aria-selected="false" onClick={() => pick(c)}>
-              <span>{c.name}<small>{c.phone || 'No phone'}</small></span>
-              {Number(c.balance) > 0 && <span className="badge amber">owes {money(c.balance, currency)}</span>}
+              <span>{c.name}<small>{c.phone || tr('No phone')}</small></span>
+              {Number(c.balance) > 0 && <span className="badge amber">{tr('owes {amount}', { amount: money(c.balance, currency) })}</span>}
             </button></li>
           ))}
           {q.length >= 2 && !exact && (
-            <li><button type="button" className="picker-new" disabled={saving} onClick={create}><Plus size={14} /> {saving ? 'Saving…' : `Save "${value.name.trim()}" as a new customer`}</button></li>
+            <li><button type="button" className="picker-new" disabled={saving} onClick={create}><Plus size={14} /> {saving ? tr('Saving…') : tr('Save "{name}" as a new customer', { name: value.name.trim() })}</button></li>
           )}
         </ul>
       )}
-      <label>Phone (optional)<input maxLength={40} inputMode="tel" value={value.phone} disabled={disabled} onChange={e => onChange({ ...value, phone: e.target.value })} /></label>
+      <label>{tr('Phone (optional)')}<input maxLength={40} inputMode="tel" value={value.phone} disabled={disabled} onChange={e => onChange({ ...value, phone: e.target.value })} /></label>
       {error && <small className="net-error">{error}</small>}
-      {creditSelected && <small className="net-error">Choose or save a customer to sell on credit.</small>}
+      {creditSelected && <small className="net-error">{tr('Choose or save a customer to sell on credit.')}</small>}
     </div>
   );
 }
