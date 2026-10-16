@@ -209,3 +209,41 @@ textarea:focus{border-color:#2e7960;box-shadow:0 0 0 3px #2e796014}
 .pay-later:hover{background:#fbf5e8!important}
 .pay-later.active{background:#fbf5e8!important;border-style:solid!important}
 .credit-hint{background:#f2f6f3;border:1px dashed #cfdcd3;border-radius:10px;padding:12px 14px;font-size:13px;color:#4a5c53;margin-bottom:16px;line-height:1.55}
+
+/* ---- Camera barcode scanner ---- */
+.search-box .camera-scan-button{display:inline-flex;align-items:center;gap:6px;background:#24694f;color:#fff;border-radius:7px;padding:8px 12px;margin:5px -8px 5px 0;font-size:13px;font-weight:600;white-space:nowrap}
+.search-box .camera-scan-button:hover{background:#18563e}
+@media(max-width:420px){.search-box .camera-scan-button span{display:none}}
+label.has-scan{position:relative}
+label.has-scan input{padding-right:48px}
+.field-scan{position:absolute;right:6px;bottom:6px;width:36px;height:34px;display:grid;place-items:center;border-radius:7px;background:#edf4ef;color:#24694f}
+.field-scan:hover{background:#dcebe1}
+.scanner{position:fixed;inset:0;z-index:300;background:#0c1612;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.scanner-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+.scanner-top strong{font-size:16px;display:block}
+.scanner-top small{color:#b9cbc1;margin-top:2px}
+.scanner-close{display:inline-flex;align-items:center;gap:6px;background:#ffffff1a;color:#fff;border-radius:999px;padding:9px 16px;font-weight:600;font-size:14px}
+.scanner-close:hover{background:#ffffff2e}
+.scanner-view{position:relative;flex:1;min-height:0;overflow:hidden;background:#000}
+.scanner-view video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scanner-frame{position:absolute;left:50%;top:50%;width:min(86%,560px);height:min(60%,300px);transform:translate(-50%,-50%);box-shadow:0 0 0 100vmax #00000073;border-radius:14px;pointer-events:none}
+.scanner-frame .corner{position:absolute;width:30px;height:30px;border:4px solid #fff;border-radius:3px}
+.corner.tl{left:-2px;top:-2px;border-right:0;border-bottom:0;border-top-left-radius:14px}
+.corner.tr{right:-2px;top:-2px;border-left:0;border-bottom:0;border-top-right-radius:14px}
+.corner.bl{left:-2px;bottom:-2px;border-right:0;border-top:0;border-bottom-left-radius:14px}
+.corner.br{right:-2px;bottom:-2px;border-left:0;border-top:0;border-bottom-right-radius:14px}
+.scanner-laser{position:absolute;left:6%;right:6%;top:50%;height:2px;background:#5fe0a0;box-shadow:0 0 12px #5fe0a0;border-radius:2px;animation:laser 1.8s ease-in-out infinite}
+@keyframes laser{0%,100%{transform:translateY(-60px);opacity:.5}50%{transform:translateY(60px);opacity:1}}
+@media(prefers-reduced-motion:reduce){.scanner-laser{animation:none}}
+.scanner-status{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:9px;background:#000000a0;padding:10px 16px;border-radius:999px;font-size:14px}
+.scanner-error{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;color:#ffd5cc}
+.scanner-error p{color:#fff;max-width:340px;line-height:1.5}
+.scanner-bottom{padding:12px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.scanner-result{display:flex;align-items:center;gap:10px;min-height:46px;border-radius:10px;padding:10px 14px;background:#ffffff12;color:#d7e4dc;font-size:14px;line-height:1.4;transition:background .15s}
+.scanner-result svg{flex:none}
+.scanner-result.is-good{background:#1f6b48;color:#fff}
+.scanner-result.is-bad{background:#7c2d24;color:#fff}
+.scanner-tools{display:flex;gap:10px;justify-content:center}
+.scanner-tools:empty{display:none}
+.scanner-tools button{display:inline-flex;align-items:center;gap:8px;background:#ffffff1a;color:#fff;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:600}
+.scanner-tools button[aria-pressed="true"]{background:#f0cf86;color:#1b2b24}
