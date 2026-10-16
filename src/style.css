@@ -247,3 +247,16 @@ label.has-scan input{padding-right:48px}
 .scanner-tools:empty{display:none}
 .scanner-tools button{display:inline-flex;align-items:center;gap:8px;background:#ffffff1a;color:#fff;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:600}
 .scanner-tools button[aria-pressed="true"]{background:#f0cf86;color:#1b2b24}
+
+/* ---- Email verification pages ---- */
+.verify-page .verify-brand{color:#113e32;font-size:22px;margin-bottom:26px}
+.verify-page .verify-brand .brand-icon{width:34px;height:34px;background:#113e32}
+.verify-page .verify-brand .brand-icon img{width:100%;height:100%;border-radius:9px}
+.verify-email{display:flex;flex-direction:column;gap:3px;background:#f6f8f7;border:1px solid #e0e7e1;border-radius:9px;padding:11px 13px;margin-bottom:20px;font-size:13px;word-break:break-all}
+.verify-email span{font-size:11px;color:#7b8982;font-weight:600}
+.verify-button{width:100%}
+.verify-resend{margin-top:4px}
+.verify-success-icon{color:#24694f}
+.verify-next{margin:0 0 22px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#33463d}
+.verify-next li{display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.verify-next li:before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:#24694f;margin-top:7px}

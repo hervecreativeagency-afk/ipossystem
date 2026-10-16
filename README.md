@@ -27,3 +27,25 @@ Local tax invoices/refund receipts are not submitted to ZRA or certified fiscal 
 ## Verification
 
 Production build and 23 unit tests passed. Rollback live database checks verified checkout/retries, mixed payment/change, partial/full refunds/restocking, adjustment limits, quotation conversion, shift reconciliation, audit and role/company restrictions. Browser/device, actual email activation/inbox delivery, concurrent checkout sessions and physical printer/scanner checks remain before an operational pilot.
+
+## Email verification links
+
+Sign-up confirmation emails open an iPOS page instead of a Supabase address, using the same link structure as MongoDB Atlas:
+
+`https://ipossystem.vercel.app/account/email/verify?token_hash=…&type=signup&n=%2Faccount%2Fregister%2Fsuccess&username=owner%40store.com`
+
+| Part | Meaning |
+|---|---|
+| `/account/email/verify` | iPOS confirmation page (asks for one tap, so email scanners can't use up the link) |
+| `token_hash` | one-time secret from Supabase; removed from the address bar after the page opens |
+| `type` | `signup`, `invite`, `recovery`, `email_change` or `magiclink` |
+| `n` | iPOS page to open after confirming; links to other websites are refused |
+| `username` | the email address being confirmed (display only) |
+
+After confirming, new directors land on `/account/register/success`, which waits for the company workspace to be created. Expired links offer "Send a new link".
+
+**Setup in Supabase (one time):**
+1. Authentication → Emails → **Confirm signup**: subject `Confirm your email for iPOS`, body = `supabase/email-templates/confirm-signup.html`.
+2. Authentication → URL Configuration → Redirect URLs: add `https://ipossystem.vercel.app/**`.
+
+Until the template is changed, the default Supabase link still works: it now returns to `/account/register/success`.
