@@ -6,6 +6,8 @@ import { list, rpc } from './operations';
 import { toast } from './Toast';
 import { buildReorderList, groupBySupplier, purchaseItems, poNumber, purchaseOrderText } from './reorder-utils';
 import { normalizePhone, whatsappUrl } from './receipt-share';
+import { ALL, branchName } from './branches';
+import { ChooseBranch } from './BranchPages';
 
 const money = (n, c) => new Intl.NumberFormat('en-ZM', { style: 'currency', currency: c || 'ZMW' }).format(Number(n || 0));
 const msg = e => e?.message || 'Something went wrong. Please try again.';
@@ -16,7 +18,8 @@ const REASON = { out: ['Out of stock', 'red'], low: ['Low stock', 'amber'], soon
 
 export function Reorder({ auth }) {
   if (!['director', 'supervisor'].includes(auth.membership.role)) return <Navigate to="/pos" replace />;
-  return <ReorderContent auth={auth} />;
+  if (auth.branchId === ALL) return <ChooseBranch auth={auth} title="Reorder list" text="Stock is counted per branch. Choose the branch to reorder for." />;
+  return <ReorderContent key={auth.branchId || 'none'} auth={auth} />;
 }
 
 function ReorderContent({ auth }) {
@@ -32,12 +35,14 @@ function ReorderContent({ auth }) {
     setLoading(true); setError('');
     try {
       const [products, suppliers, orders, activity] = await Promise.all([
-        api.loadProducts(m.company_id, m.role),
+        api.loadProducts(m.company_id, m.role, auth.branchId),
         list('suppliers', m.company_id),
         list('purchase_orders', m.company_id),
-        api.loadRecentActivity(m.company_id, auth.session.user.id, m.role, 30),
+        api.loadRecentActivity(m.company_id, auth.session.user.id, m.role, 30, auth.branchId),
       ]);
-      setData({ products, suppliers: suppliers.filter(s => s.active), orders, saleItems: activity.items });
+      // Orders still open for another branch don't count as "on order" here, but still tell us the usual supplier.
+      const here = orders.map(o => o.branch_id && auth.branchId && o.branch_id !== auth.branchId && o.status === 'ordered' ? { ...o, status: 'elsewhere' } : o);
+      setData({ products, suppliers: suppliers.filter(s => s.active), orders: here, saleItems: activity.items });
     } catch (e) { setError(msg(e)); }
     finally { setLoading(false); }
   }
@@ -73,7 +78,7 @@ function ReorderContent({ auth }) {
     requests.current[key] ||= crypto.randomUUID();  // a retry after a dropped connection never makes two orders
     setBusy(group.supplier_id);
     try {
-      const id = await rpc('create_purchase', { p_company_id: m.company_id, p_supplier_id: supplier.id, p_items: items, p_notes: 'Created from the reorder list', p_request_id: requests.current[key] });
+      const id = await rpc(auth.branchId ? 'create_purchase_at' : 'create_purchase', { p_company_id: m.company_id, ...(auth.branchId ? { p_branch_id: auth.branchId } : {}), p_supplier_id: supplier.id, p_items: items, p_notes: 'Created from the reorder list', p_request_id: requests.current[key] });
       delete requests.current[key];
       const lineCopy = group.items.map(l => ({ name: l.name, sku: l.sku, quantity: Number(l.quantity), unit_cost: Number(l.unit_cost) }));
       setCreated(c => [{ id, number: poNumber(id), supplier, lines: lineCopy, total: items.reduce((n, i) => n + i.quantity * i.unit_cost, 0), at: new Date() }, ...c]);
@@ -94,7 +99,7 @@ function ReorderContent({ auth }) {
   return (
     <>
       <div className="page-heading">
-        <div><span className="eyebrow">STORE WORKSPACE</span><h1>Reorder list</h1><p>What to restock, how much, and from whom. One tap makes the purchase order.</p></div>
+        <div><span className="eyebrow">STORE WORKSPACE</span><h1>Reorder list</h1><p>{auth.multiBranch ? `For ${branchName(auth.branches, auth.branchId)}. ` : ''}What to restock, how much, and from whom. One tap makes the purchase order.</p></div>
         <div className="heading-actions">
           <label className="reorder-cover">Order enough for
             <select value={cover} onChange={e => setCover(Number(e.target.value))}>{COVER.map(([d, l]) => <option key={d} value={d}>{l}</option>)}</select>
