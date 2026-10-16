@@ -40,6 +40,17 @@ test('low stock sorts the emptiest first', () => {
 });
 
 test('change vs previous daily average', () => {
-  assert.equal(changeVsPrevious([{ total: 10 }, { total: 10 }, { total: 15 }]), 0.5);
+  assert.equal(changeVsPrevious([{ total: 10 }, { total: 10 }, { total: 10 }, { total: 15 }]), 0.5);
+  assert.equal(changeVsPrevious([{ total: 0 }, { total: 0 }, { total: 10 }, { total: 60 }]), null);
   assert.equal(changeVsPrevious([{ total: 0 }, { total: 5 }]), null);
+});
+
+test('payment mix counts cash kept after change, not cash handed over', () => {
+  const m = paymentMix(
+    [{ method: 'Cash', amount: 100000 }, { method: 'Cash', amount: 10 }, { method: 'MTN Money', amount: 20 }],
+    [{ total: 52500, change: 47500 }, { total: 30, change: 0 }],
+  );
+  assert.equal(m.find(x => x.method === 'Cash').amount, 52510);
+  assert.equal(m.find(x => x.method === 'MTN Money').amount, 20);
+  assert.equal(m.reduce((n, x) => n + x.amount, 0), 52530);
 });

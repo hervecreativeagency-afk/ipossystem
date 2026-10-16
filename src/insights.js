@@ -31,9 +31,13 @@ export function topProducts(items, limit = 5) {
 }
 
 export const METHODS = ['Cash', 'Airtel Money', 'MTN Money', 'Bank/Card'];
-export function paymentMix(payments) {
+// Payments store the amount handed over; change is always returned in cash,
+// so cash kept by the store = cash received - change given.
+export function paymentMix(payments, sales = []) {
   const sums = new Map(METHODS.map(m => [m, 0]));
   for (const p of payments) sums.set(p.method, (sums.get(p.method) || 0) + cents(p.amount));
+  const change = sales.reduce((n, s) => n + cents(s.change), 0);
+  sums.set('Cash', Math.max(0, (sums.get('Cash') || 0) - change));
   const total = [...sums.values()].reduce((a, b) => a + b, 0);
   return [...sums.entries()].map(([method, c]) => ({ method, amount: c / 100, share: total ? c / total : 0 }));
 }
@@ -47,6 +51,8 @@ export function changeVsPrevious(series) {
   if (series.length < 2) return null;
   const today = series[series.length - 1].total;
   const prior = series.slice(0, -1);
+  // Too few trading days makes the comparison meaningless (e.g. +500%).
+  if (prior.filter(d => d.total > 0).length < 3) return null;
   const avg = prior.reduce((n, d) => n + d.total, 0) / prior.length;
   if (!avg) return null;
   return (today - avg) / avg;

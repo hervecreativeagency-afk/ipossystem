@@ -60,7 +60,7 @@ function WeekChart({ series, money, currency }) {
                 onMouseEnter={() => setHover(i)} onFocus={() => setHover(i)} onBlur={() => setHover(null)} onClick={() => setHover(i)}
                 tabIndex={0} aria-label={`${dayLabel(d.day, false)}: ${money(d.total, currency)}, ${d.count} sales`} />
               <text x={cx} y={H - 9} textAnchor="middle" className={'axis-text' + (i === last ? ' axis-today' : '')}>{i === last ? 'Today' : dayLabel(d.day)}</text>
-              {i === last && d.total > 0 && hover == null && <text x={cx} y={top - 8} textAnchor="middle" className="value-text">{money(d.total, currency)}</text>}
+              
             </g>
           );
         })}
@@ -102,7 +102,7 @@ export function DashboardInsights({ auth, products, money }) {
   const weekCount = series.reduce((n, d) => n + d.count, 0);
   const change = changeVsPrevious(series);
   const top = topProducts(data.items, 5);
-  const mix = paymentMix(data.payments);
+  const mix = paymentMix(data.payments, data.sales);
   return (
     <section className="insights" aria-label="Sales insights">
       {stale && <div className="offline-banner" role="status"><strong>Offline.</strong> Showing figures saved on this device at {new Date(stale).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}.</div>}
@@ -132,7 +132,7 @@ export function DashboardInsights({ auth, products, money }) {
       </div>
 
       <div className="insight-card">
-        <div className="insight-title"><Trophy size={17} /><h3>Best sellers</h3><small>7 days, by revenue</small></div>
+        <div className="insight-title"><Trophy size={17} /><h3>Best sellers</h3><small>7 days, before tax</small></div>
         {top.length ? <BarList rows={top} money={money} currency={currency} value={r => r.revenue} detail={r => r.quantity + ' sold'} /> : <p className="muted">Sales will show your best sellers here.</p>}
       </div>
 
