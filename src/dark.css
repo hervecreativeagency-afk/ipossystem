@@ -438,6 +438,49 @@
 :root[data-theme="dark"] .runout-panel{background:#232c28;border:1px solid #3d463e}
 :root[data-theme="dark"] .feedback-faces button{border:1px solid #404943;background:#232c28}
 :root[data-theme="dark"] .feedback-faces button.active{border-color:#24694f;background:#19241d;color:#b2e3d1}
+:root[data-theme="dark"] .neg{color:#ce6c62}
+:root[data-theme="dark"] .statement-table thead th{color:#98a7a0;border-bottom:2px solid #24694f}
+:root[data-theme="dark"] .statement-table .st-header th{color:#9cdfc6}
+:root[data-theme="dark"] .statement-table .st-item td,:root[data-theme="dark"] .statement-table .st-item th{border-bottom:1px solid #343b36}
+:root[data-theme="dark"] .statement-table .st-subtotal th,:root[data-theme="dark"] .statement-table .st-subtotal td{border-top:1px solid #4e594c}
+:root[data-theme="dark"] .statement-table .st-total th,:root[data-theme="dark"] .statement-table .st-total td{background:#1a231d;border-top:1px solid #1d2f27;border-bottom:3px double #1d2f27}
+:root[data-theme="dark"] .statement-table .st-percent th,:root[data-theme="dark"] .statement-table .st-percent td{color:#98a7a0}
+:root[data-theme="dark"] .statement-table .muted-num{color:#98a7a0}
+:root[data-theme="dark"] .statement-table .change{color:#8a9791}
+:root[data-theme="dark"] .statement-table .change.up{color:#99e4be}
+:root[data-theme="dark"] .statement-table .change.down{color:#ce6c62}
+:root[data-theme="dark"] .not-recorded{color:#728278}
+:root[data-theme="dark"] .preset-row button{border:1px solid #444e47;background:#232c28}
+:root[data-theme="dark"] .preset-row button.active{background:#24694f;border-color:#24694f;color:#fff}
+:root[data-theme="dark"] .menu{background:#232c28;border:1px solid #3d463f;box-shadow:0 16px 40px #0b1e1626}
+:root[data-theme="dark"] .menu button{background:none;border:0;color:inherit}
+:root[data-theme="dark"] .menu button:hover{background:#1a211c}
+:root[data-theme="dark"] .menu small{color:#8a9791}
+:root[data-theme="dark"] .sheet-table th{background:#191f1b;color:#9eaea6;border-bottom:1px solid #3d463f}
+:root[data-theme="dark"] .sheet-table td{border-bottom:1px solid #343b36}
+:root[data-theme="dark"] .sheet-table td small{color:#7e8d84}
+:root[data-theme="dark"] .sheet-table tfoot td{background:#191f1b;border-top:2px solid #4e594c}
+:root[data-theme="dark"] .sheet-table tbody tr:nth-child(even) td{background:#232c28}
+:root[data-theme="dark"] .cashbook-sheet td.in{color:#99e4be}
+:root[data-theme="dark"] .cashbook-sheet td.out{color:#d57e75}
+:root[data-theme="dark"] .cashbook-sheet .sheet-opening td{background:#1a231d !important}
+:root[data-theme="dark"] .cashbook-sheet .sheet-subtotal td{background:#1c201d !important;color:#abbbb1;border-bottom:1px solid #444e47}
+:root[data-theme="dark"] .cashbook-sheet .sheet-closing td{background:#1e2922 !important;border-bottom:3px double #1d2f27}
+:root[data-theme="dark"] .cashbook-sheet tr.reversal td{color:#8a9791}
+:root[data-theme="dark"] .cashbook-sheet .sheet-entry td{background:#29230c !important;border-top:2px dashed #716540}
+:root[data-theme="dark"] .cashbook-sheet .sheet-entry input.in{color:#99e4be}
+:root[data-theme="dark"] .cashbook-sheet .sheet-entry input.out{color:#d57e75}
+:root[data-theme="dark"] .grid-scroll{border:1px solid #3d463f}
+:root[data-theme="dark"] .grid-table th{background:#191f1b;color:#9eaea6;border-bottom:1px solid #3d463f}
+:root[data-theme="dark"] .grid-table td{border-bottom:1px solid #343b36;border-right:1px solid #323934}
+:root[data-theme="dark"] .grid-table tr.blank td.cell-input{background:#2f260e}
+:root[data-theme="dark"] .grid-table td.cell-input input{border:0;background:transparent}
+:root[data-theme="dark"] .grid-table td.cell-input input:focus{outline:2px solid #24694f;background:#232c28}
+:root[data-theme="dark"] .grid-foot{color:#98a7a0}
+:root[data-theme="dark"] .statement-table th[scope=row]{color:#c8d8d2;background:none}
+:root[data-theme="dark"] .statement-table .st-percent th[scope=row]{color:#98a7a0}
+:root[data-theme="dark"] .cashbook-sheet .icon-reverse{border:1px solid #444e47;background:#232c28;color:#9cdfc6}
+:root[data-theme="dark"] .cashbook-sheet .icon-reverse:hover{background:#1a231d}
 :root[data-theme="dark"] .bar-prev,:root[data-theme="dark"] .lg-prev{fill:#2b3832;background:#2b3832}
 :root[data-theme="dark"] .hbar{fill:#3d7a5f}:root[data-theme="dark"] .hbar-now{fill:#5fcf9c}
 :root[data-theme="dark"] .donut-track{stroke:#26312c}:root[data-theme="dark"] .spark-area{fill:#5fcf9c1f}:root[data-theme="dark"] .spark-line{stroke:#5fcf9c}:root[data-theme="dark"] .spark-dot{fill:#5fcf9c}
