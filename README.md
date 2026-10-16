@@ -117,3 +117,9 @@ Each flag can be marked **Looks fine** (with a note) or **Looking into it**, and
 Directors and supervisors get a **daily summary** on the dashboard (yesterday vs the same day last week, best seller, today so far, out-of-stock and low stock, expiring stock, money owed on credit) and a **Business assistant** page with plain answers to: how did we do this week, what sells best, what makes the most profit, what isn't selling, what to reorder, when we are busiest, how customers pay, who owes money, which cashier sells most, and how branches compare. Typed questions are matched to the closest of these.
 
 Everything is worked out in the app from the shop's own data (`src/assistant-utils.js`); no AI service or outside account is used. Supervisors don't see profit or cashier comparisons.
+
+## Dark mode
+
+Each device can use **Light**, **Dark** or **Match this device** (sidebar button, or My Profile → Appearance). The choice is stored on the device and applied before the page draws, so there is no white flash.
+
+`src/dark.css` is generated from `src/style.css` by `scripts/make-dark-css.py` (needs `pip install tinycss2`): every rule that sets a colour is repeated for dark mode with light surfaces turned dark and dark text turned light; green buttons, the toasts and other dark/brand surfaces keep their colours; receipts keep their white paper look and printing is unaffected. **After changing colours in style.css, run `python3 scripts/make-dark-css.py`.**
