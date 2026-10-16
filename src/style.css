@@ -145,3 +145,60 @@ body{font-family:"Aptos","Trebuchet MS","Segoe UI",sans-serif;min-width:320px;te
 .insights-loading{display:flex;align-items:center;gap:9px;color:#66766e;padding:20px 0 30px}
 @media(max-width:1100px){.insights{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.insights{grid-template-columns:1fr;gap:12px}.insight-card{padding:16px}.insight-head-side{align-items:flex-start}.insight-head h2{font-size:24px}}
+
+/* ---- Customers & credit ---- */
+textarea{width:100%;border:1px solid #dce3df;border-radius:8px;padding:12px 13px;background:#fff;color:#24372e;outline:none;font:inherit;margin-top:8px;resize:vertical}
+textarea:focus{border-color:#2e7960;box-shadow:0 0 0 3px #2e796014}
+.customer-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.customer-form small{margin-top:5px}
+@media(max-width:620px){.customer-form{grid-template-columns:1fr}}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.modal-head-actions{display:flex;align-items:center;gap:8px}
+.secondary.small{padding:7px 11px;font-size:12px;gap:6px}
+.customer-detail{width:min(640px,100%)}
+.customer-summary{display:grid;grid-template-columns:minmax(180px,220px) 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:620px){.customer-summary{grid-template-columns:1fr}}
+.owed-card{background:#f2f6f3;border:1px solid #dce7df;border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.owed-card span{font-size:12px;color:#66766e;font-weight:600}
+.owed-card strong{font-size:24px;letter-spacing:-.03em;color:#26352f}
+.owed-card.owing{background:#fbf5e8;border-color:#efdfbd}
+.owed-card.owing strong{color:#7a5a1f}
+.customer-facts{display:flex;flex-direction:column;gap:8px;font-size:13px;color:#4a5c53;justify-content:center}
+.customer-facts>div{display:flex;align-items:center;gap:7px}
+.customer-facts a{color:#24694f;font-weight:600}
+.customer-notes{font-size:12px;color:#66766e;background:#fafcf9;border-radius:8px;padding:8px 10px;line-height:1.5}
+.pay-form{border:1px solid #e0e7e1;border-radius:11px;padding:16px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
+.pay-form h3{font-size:15px}
+.pay-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pay-form .link-button{align-self:flex-start}
+.tabs{display:flex;gap:4px;border-bottom:1px solid #e0e7e1;margin:6px 0 4px}
+.tabs button{padding:10px 14px;font-size:13px;font-weight:600;color:#7b8982;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.active{color:#24694f;border-bottom-color:#24694f}
+.ledger-list{list-style:none;margin:0;padding:0}
+.ledger-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #eef2ef;font-size:13px}
+.ledger-list li:last-child{border-bottom:0}
+.ledger-list small{margin-top:3px}
+.ledger-amounts{text-align:right;white-space:nowrap}
+.ledger-amounts .debit{color:#7a5a1f}.ledger-amounts .credit{color:#2f6b45}
+.customer-stats{grid-template-columns:repeat(3,1fr)}
+.stat-card.warn{border-color:#efcfc8;background:#fffaf8}
+.toolbar-right{display:flex;align-items:center;gap:12px}
+.checkbox-label.inline{display:inline-flex;align-items:center;gap:7px;font-size:13px;white-space:nowrap}
+.checkbox-label.inline input{width:auto;margin:0}
+.customer-table tr.clickable{cursor:pointer}
+.customer-table tr.clickable:hover td{background:#fafcf9}
+.customer-table td strong{color:#26352f}
+.muted-inline{color:#a3afa8}
+.customer-picker{position:relative;display:flex;flex-direction:column;gap:10px}
+.picker-list{position:absolute;left:0;right:0;top:66px;z-index:30;list-style:none;margin:0;padding:6px;background:#fff;border:1px solid #dce4df;border-radius:10px;box-shadow:0 14px 30px #11302622;max-height:260px;overflow:auto}
+.picker-list button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:9px 10px;border-radius:7px;font-size:13px}
+.picker-list button:hover,.picker-list button:focus-visible{background:#f1f6f3;outline:none}
+.picker-list button small{display:block}
+.picker-list .badge{margin:0!important}
+.picker-new{color:#24694f;font-weight:600;justify-content:flex-start!important}
+.picked-customer{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#f2f6f3;border:1px solid #dce7df;border-radius:9px;padding:10px 12px}
+.picked-customer strong{font-size:13px;color:#26352f}
+.picked-customer button{padding:6px;border-radius:6px;color:#66766e}.picked-customer button:hover{background:#e3ece6}
+.credit-note{background:#fbf5e8;border-radius:7px;padding:8px 10px;color:#7a5a1f!important}
+.receipt-balance{font-weight:700;border-top:1px dashed #ccd6d0;margin-top:4px;padding-top:4px}
+@media(max-width:700px){.customer-stats{grid-template-columns:1fr 1fr}.toolbar-right{gap:8px}}
