@@ -4,6 +4,9 @@
 const SHELL = 'ipos-shell-v1';
 const ASSETS = 'ipos-assets-v1';
 const CORE = ['/', '/index.html', '/manifest.webmanifest', '/ipos-logo.png', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
+// Filled in at build time with every file of this release (see vite.config.js).
+// The list changes with each release, so phones detect and install updates.
+const BUILD_ASSETS = self.__BUILD_ASSETS__ || [];
 
 async function assetsIn(html) {
   return [...html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g)].map(m => m[1]);
@@ -15,7 +18,12 @@ self.addEventListener('install', event => {
     await shell.addAll(CORE.map(u => new Request(u, { cache: 'reload' })));
     const html = await (await shell.match('/index.html')).text();
     const assets = await caches.open(ASSETS);
-    await assets.addAll(await assetsIn(html));
+    // Files the first screen needs must all be saved; on-demand parts are saved best-effort.
+    const needed = await assetsIn(html);
+    await assets.addAll(needed);
+    await Promise.allSettled(BUILD_ASSETS.filter(a => !needed.includes(a)).map(async a => {
+      if (!(await assets.match(a))) await assets.add(a);
+    }));
     await self.skipWaiting();
   })());
 });
@@ -27,7 +35,7 @@ self.addEventListener('activate', event => {
     const shell = await caches.open(SHELL);
     const page = await shell.match('/index.html');
     if (page) {
-      const keep = new Set(await assetsIn(await page.text()));
+      const keep = new Set([...BUILD_ASSETS, ...(await assetsIn(await page.text()))]);
       const assets = await caches.open(ASSETS);
       for (const req of await assets.keys()) {
         const path = new URL(req.url).pathname;
@@ -73,8 +81,8 @@ self.addEventListener('fetch', event => {
   // Icons, logo and manifest: serve saved copy, refresh in the background.
   if (CORE.includes(url.pathname)) {
     event.respondWith((async () => {
-      const cached = await caches.match(req);
-      const update = fetch(req).then(async r => { if (r.ok) (await caches.open(SHELL)).put(req, r.clone()); return r; }).catch(() => cached);
+      const cached = await caches.match(req, { ignoreSearch: true });
+      const update = fetch(req).then(async r => { if (r.ok) (await caches.open(SHELL)).put(url.pathname, r.clone()); return r; }).catch(() => cached);
       return cached || update;
     })());
   }
