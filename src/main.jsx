@@ -25,7 +25,7 @@ import {Signup,Staff,StoreSettings,AdminConsole} from './Management';
 import {Quotations,SuppliersPurchases,Cashbook,TaxInvoices,Reports} from './OperationsPages';
 const Auth=createContext();
 const money=(n,currency='ZMW')=>new Intl.NumberFormat('en-ZM',{style:'currency',currency}).format(Number(n||0));
-const message=e=>e.message||'Something went wrong. Please try again.';
+const message=e=>/numeric field overflow/i.test(e?.message||'')?'An amount is too large to save. Check the numbers and try again.':(e?.message||'Something went wrong. Please try again.');
 function Spinner({label='Loading…'}){return <div className="loading" role="status"><LoaderCircle size={19} className="spin"/>{label}</div>}
 function Notice({children}){return children&&<div className="notice" role="alert"><AlertCircle size={18}/><span>{children}</span></div>}
 function Provider({children}){

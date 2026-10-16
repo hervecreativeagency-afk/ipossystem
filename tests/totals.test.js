@@ -10,3 +10,11 @@ test('round at cent precision',()=>assert.equal(totals([{...product,selling_pric
 
 test('all supported single payment methods record exact payment',()=>{for(const method of ['Cash','Airtel Money','MTN Money','Bank/Card'])assert.deepEqual(paymentRows(method,23.2,{},23.2),[{method,amount:23.2}]);});
 test('reject hidden invalid mixed amounts and missing payment',()=>{assert.throws(()=>paymentRows('Mixed payment',0,{'Cash':30,'MTN Money':-1},23.2));assert.throws(()=>paymentRows('Mixed payment',0,{'Cash':30,'Airtel Money':'bad'},23.2));assert.throws(()=>paymentRows('Cash','',{},0));assert.throws(()=>paymentRows('Unknown',25,{},23.2));});
+
+test('reject impossibly large payment amounts', () => {
+  assert.throws(() => paymentRows('Cash', 44545454545.2, {}, 52500), /too large/);
+  assert.throws(() => paymentRows('Cash', 9000000, {}, 52500), /far more than the total/);
+  assert.throws(() => paymentRows('Mixed payment', 0, { 'Cash': 10000000000, 'MTN Money': 1 }, 52500), /too large/);
+  assert.equal(paymentRows('Cash', 60000, {}, 52500)[0].amount, 60000);
+  assert.equal(paymentRows('Cash', 100, {}, 5)[0].amount, 100);
+});

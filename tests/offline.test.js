@@ -74,3 +74,9 @@ test('caches round-trip with a saved time', () => {
   assert.deepEqual(c.data, [1, 2]);
   assert.ok(c.savedAt);
 });
+
+test('database rejections are not mistaken for lost connection', () => {
+  assert.equal(offline.isNetworkError({ message: 'numeric field overflow', code: '22003', details: 'timed out' }), false);
+  assert.equal(offline.isNetworkError({ message: 'TypeError: Failed to fetch', code: '' }), true);
+  assert.match(offline.friendlyError({ message: 'numeric field overflow' }), /too large/);
+});

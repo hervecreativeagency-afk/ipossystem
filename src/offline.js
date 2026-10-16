@@ -41,8 +41,16 @@ export function markOffline() { if (!lastNetworkFailure) { lastNetworkFailure = 
 
 export function isNetworkError(e) {
   if (browserOffline()) return true;
+  // A database error code means the server answered: it is a rejection, not a lost connection.
+  if (typeof e?.code === 'string' && /^([0-9A-Z]{5}|PGRST\d+)$/.test(e.code)) return false;
   const text = String(e?.message || e || '') + ' ' + String(e?.details || '') + ' ' + String(e?.name || '');
   return /failed to fetch|networkerror|network request failed|load failed|fetch failed|err_internet|err_network|timed? ?out|AuthRetryableFetchError/i.test(text);
+}
+
+export function friendlyError(e) {
+  const text = e?.message || '';
+  if (/numeric field overflow/i.test(text)) return 'An amount on this sale is too large to save. Remove it and ring up the sale again with the correct amount.';
+  return text || 'The server rejected this sale.';
 }
 
 // ---- caches ---------------------------------------------------------------
@@ -119,7 +127,7 @@ export function syncQueue(uid, checkout) {
           markOnline();
         } catch (e) {
           if (isNetworkError(e)) { markOffline(); break; }
-          saveQueue(uid, loadQueue(uid).map(x => x.requestId === entry.requestId ? { ...x, status: 'failed', error: e?.message || 'The server rejected this sale.', attempts: (x.attempts || 0) + 1 } : x));
+          saveQueue(uid, loadQueue(uid).map(x => x.requestId === entry.requestId ? { ...x, status: 'failed', error: friendlyError(e), attempts: (x.attempts || 0) + 1 } : x));
           failed++;
         }
       }
