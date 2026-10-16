@@ -6,7 +6,8 @@
 // held and already on order (open purchase orders), so nothing is ordered twice.
 // Supplier and unit cost come from the product's most recent purchase.
 
-export function buildReorderList({ products = [], saleItems = [], salesDays = 30, orders = [], coverDays = 14, soonDays = 7 }) {
+// rates (optional): Map(product_id → sales per day) from forecast(), which weighs recent days more.
+export function buildReorderList({ products = [], saleItems = [], salesDays = 30, orders = [], coverDays = 14, soonDays = 7, rates = null }) {
   const sold = new Map(), onOrder = new Map(), last = new Map();
   for (const i of saleItems) sold.set(i.product_id, (sold.get(i.product_id) || 0) + Number(i.quantity || 0));
   const sortedOrders = [...orders].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
@@ -22,7 +23,7 @@ export function buildReorderList({ products = [], saleItems = [], salesDays = 30
     if (p.active === false) continue;
     const stock = Math.max(0, Number(p.stock_quantity || 0));
     const threshold = Math.max(0, Number(p.low_stock_threshold || 0));
-    const perDay = (sold.get(p.id) || 0) / salesDays;
+    const perDay = rates?.has(p.id) ? rates.get(p.id) : (sold.get(p.id) || 0) / salesDays;
     const daysLeft = perDay > 0 ? stock / perDay : null;
     const low = stock <= threshold;
     const soon = daysLeft != null && daysLeft <= soonDays;
