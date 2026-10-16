@@ -95,3 +95,7 @@ Expiry dates are optional and can be entered when receiving a delivery, adding s
 Products → "Add with sizes / colours" builds every combination of up to two options (e.g. Colour × Size), each with its own SKU, barcode, price and stock. "+ Variant" adds more to an existing product, or turns a single product into variants.
 
 Each variant is an ordinary product (so stock, reports, branches and barcodes work unchanged), linked by `variant_group_id`. Checkout shows one card per product and opens a picker for the variant.
+
+## Setup guide
+
+New owners see a **setup guide** at the top of the dashboard: shop details, products, suppliers, staff, branches, first shift, a test sale and installing the app. Each step ticks itself off from the shop's real data; optional steps can be skipped ("I work alone", "I have one shop"). The guide can be hidden and is always available under **Getting Started & Help**. Supervisors and cashiers see only the steps that apply to them. Logic: `src/setup-utils.js`; component: `src/SetupGuide.jsx`.
