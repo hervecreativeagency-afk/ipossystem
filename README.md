@@ -59,3 +59,12 @@ Every receipt has **Send receipt to phone**: type or confirm the customer's numb
 - Customers join the **offers list** only when staff tick that they agreed (Data Protection Act 2021). Date and staff member are recorded; opting out is on the Customers page.
 - Customers → **Offers list** exports only customers who agreed (CSV, spreadsheet-safe).
 - Automatic sending without a tap needs a paid WhatsApp Business API or SMS provider; not included.
+
+## Reorder list
+
+**Reorder List** (directors and supervisors) shows what to restock: out of stock, at/below the low-stock level, or under a week left at the last 30 days' sales speed.
+
+- Suggested quantity = enough for 1 week / 2 weeks / 1 month of sales + the low-stock level − stock − quantities already on open purchase orders.
+- Supplier and unit cost default to the product's most recent purchase (else the saved product cost); all editable.
+- Lines are grouped by supplier; **Create purchase order** makes one order per supplier with the existing `create_purchase` function (retry-safe), then **Send to supplier** opens WhatsApp with the order.
+- Receive deliveries in Suppliers & Purchases as before. No database changes.
