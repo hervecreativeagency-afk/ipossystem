@@ -111,3 +111,9 @@ All wording is in `src/i18n.js`: English is the key and each entry has `[Bemba, 
 Directors get a **Checks** page (Management → Checks) and a dashboard notice when something needs a second look: drawers short or over at close, the same cashier short repeatedly, refunds soon after or long after a sale, many refunds on one cashier's sales, big discounts, items sold well below their price, late-night sales, stock repeatedly adjusted out as missing/damaged, and large cash withdrawals. A flag is a reason to look, not proof of wrongdoing.
 
 Each flag can be marked **Looks fine** (with a note) or **Looking into it**, and reopened. Rules and thresholds live in `src/flag-utils.js` (`RULES`); decisions are stored in `flag_reviews` (`supabase/flag-reviews.sql`), readable and writable by directors only.
+
+## Business assistant
+
+Directors and supervisors get a **daily summary** on the dashboard (yesterday vs the same day last week, best seller, today so far, out-of-stock and low stock, expiring stock, money owed on credit) and a **Business assistant** page with plain answers to: how did we do this week, what sells best, what makes the most profit, what isn't selling, what to reorder, when we are busiest, how customers pay, who owes money, which cashier sells most, and how branches compare. Typed questions are matched to the closest of these.
+
+Everything is worked out in the app from the shop's own data (`src/assistant-utils.js`); no AI service or outside account is used. Supervisors don't see profit or cashier comparisons.
