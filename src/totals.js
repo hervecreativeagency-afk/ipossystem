@@ -7,11 +7,15 @@ export function totals(cart,discount=0){
  return {subtotal:subtotal/100,discount:d/100,tax:tax/100,total:(subtotal-d+tax)/100};
 }
 export function validateCart(cart){if(!cart.length)throw Error('Add at least one product.'); for(const i of cart){if(!Number.isSafeInteger(i.quantity)||i.quantity<1||i.quantity>i.stock_quantity)throw Error(`Insufficient stock for ${i.name}.`);} }
+// Largest value the database can store in a money column (numeric 12,2).
+export const MAX_AMOUNT=9999999999.99;
 export const paymentMethods=['Cash','Airtel Money','MTN Money','Bank/Card'];
 export function paymentRows(method,paid,mixed,total){
  if(![...paymentMethods,'Mixed payment'].includes(method))throw Error('Select a valid payment method.');
  const entries=method==='Mixed payment'?paymentMethods.map(m=>({method:m,amount:Number(mixed[m]||0)})):[{method,amount:Number(paid)}];
  if(entries.some(p=>!Number.isFinite(p.amount)||p.amount<0))throw Error('Enter a valid payment amount.');
+ if(entries.some(p=>p.amount>MAX_AMOUNT))throw Error('Amount paid is too large. Check the amount and try again.');
+ if(entries.reduce((n,p)=>n+p.amount,0)>Math.max(Number(total)*100,Number(total)+100000))throw Error('Amount paid is far more than the total. Check the amount and try again.');
  const rows=entries.filter(p=>p.amount>0);
  if(!rows.length)throw Error('Enter the amount paid.');
  const sum=rows.reduce((s,p)=>s+cents(p.amount),0);
