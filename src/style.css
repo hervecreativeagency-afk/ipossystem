@@ -464,3 +464,6 @@ label.has-scan input{padding-right:48px}
 .assist-link{display:inline-flex;gap:6px;align-items:center;margin-top:10px;font-weight:600;font-size:13.5px;color:#24694f}
 .assist-note{margin:18px 0 30px;font-size:12.5px}
 @media(max-width:620px){.assist-ask{flex-direction:column}.assist-brief,.assist-answer{padding:15px 16px}}
+.theme-button{display:inline-flex;align-items:center;gap:5px;background:none;border:0;color:inherit;font:inherit;font-size:12px;font-weight:600;cursor:pointer;opacity:.9;padding:2px 4px}
+.language-field+.language-field{margin-top:12px}
+.sidebar-tools{flex-wrap:wrap;row-gap:6px}.sidebar-tools .language-chip{border:1px solid #e6ece3;border-radius:5px;padding:2px 6px;font-size:10px}.sidebar-tools .language-chip select{font-size:11px;max-width:92px}.sidebar-tools .theme-button{font-size:10px;font-weight:500;padding:6px}
