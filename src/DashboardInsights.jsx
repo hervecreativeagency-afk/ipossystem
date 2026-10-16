@@ -142,7 +142,7 @@ export function DashboardInsights({ auth, products, money }) {
       </div>
 
       <div className="insight-card">
-        <div className="insight-title"><PackageX size={17} /><h3>Running low</h3><Link to="/products" className="insight-link">Products <ArrowUpRight size={14} /></Link></div>
+        <div className="insight-title"><PackageX size={17} /><h3>Running low</h3>{auth.membership.role === 'cashier' ? <Link to="/products" className="insight-link">Products <ArrowUpRight size={14} /></Link> : <Link to="/reorder" className="insight-link">Reorder list <ArrowUpRight size={14} /></Link>}</div>
         {low.length ? (
           <ul className="low-list">
             {low.map(p => (
