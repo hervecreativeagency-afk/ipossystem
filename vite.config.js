@@ -12,7 +12,8 @@ function offlineAssetList() {
     name: 'ipos-offline-asset-list',
     apply: 'build',
     configResolved(config) { outDir = config.build.outDir; },
-    generateBundle(_, bundle) { files = Object.keys(bundle).filter(f => f.startsWith('assets/')).map(f => '/' + f).sort(); },
+    // The Excel library (~1 MB) is only fetched when someone downloads a spreadsheet, not saved on every device.
+    generateBundle(_, bundle) { files = Object.keys(bundle).filter(f => f.startsWith('assets/') && !/exceljs/i.test(f)).map(f => '/' + f).sort(); },
     closeBundle() {
       const sw = path.resolve(outDir, 'sw.js');
       if (!fs.existsSync(sw)) return;
