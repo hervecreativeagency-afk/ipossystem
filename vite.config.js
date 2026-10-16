@@ -23,4 +23,4 @@ function offlineAssetList() {
   };
 }
 
-export default defineConfig({ plugins: [tailwindcss(), offlineAssetList()], build: { outDir: 'dist', rollupOptions: { output: { manualChunks: { supabase: ['@supabase/supabase-js'] } } } } });
+export default defineConfig({ define: { __APP_VERSION__: JSON.stringify((process.env.VERCEL_GIT_COMMIT_SHA || 'dev').slice(0, 7)) }, plugins: [tailwindcss(), offlineAssetList()], build: { outDir: 'dist', rollupOptions: { output: { manualChunks: { supabase: ['@supabase/supabase-js'] } } } } });

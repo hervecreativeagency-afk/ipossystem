@@ -436,6 +436,8 @@
 :root[data-theme="dark"] .runout-item.out .runout-track i,:root[data-theme="dark"] .runout-item.urgent .runout-track i{background:#c0453a}
 :root[data-theme="dark"] .runout-item.soon .runout-track i{background:#d79a2b}
 :root[data-theme="dark"] .runout-panel{background:#232c28;border:1px solid #3d463e}
+:root[data-theme="dark"] .feedback-faces button{border:1px solid #404943;background:#232c28}
+:root[data-theme="dark"] .feedback-faces button.active{border-color:#24694f;background:#19241d;color:#b2e3d1}
 :root[data-theme="dark"] .bar-prev,:root[data-theme="dark"] .lg-prev{fill:#2b3832;background:#2b3832}
 :root[data-theme="dark"] .hbar{fill:#3d7a5f}:root[data-theme="dark"] .hbar-now{fill:#5fcf9c}
 :root[data-theme="dark"] .donut-track{stroke:#26312c}:root[data-theme="dark"] .spark-area{fill:#5fcf9c1f}:root[data-theme="dark"] .spark-line{stroke:#5fcf9c}:root[data-theme="dark"] .spark-dot{fill:#5fcf9c}
