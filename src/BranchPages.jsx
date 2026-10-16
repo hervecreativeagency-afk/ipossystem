@@ -1,3 +1,4 @@
+import { Skeleton } from './Loading';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Store, MapPin, Plus, X, LoaderCircle, AlertCircle, ArrowRight, Truck, PackageCheck, Ban, Pencil, Users, RefreshCw, Search, Trash2 } from 'lucide-react';
@@ -324,7 +325,7 @@ function TransferForm({ auth, onClose, onSent }) {
           <label>To<select value={to} onChange={e => setTo(e.target.value)} disabled={busy} required><option value="">Choose branch…</option>{auth.branches.filter(b => b.id !== from).map(b => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
         </div>
         <div className="search-box transfer-search"><Search size={18} /><input placeholder="Add a product: name, SKU or barcode…" value={search} onChange={e => setSearch(e.target.value)} aria-label="Find product" /></div>
-        {!products ? <div className="insights-loading"><LoaderCircle size={16} className="spin" /> Loading stock…</div> : (q || !lines.length) && (
+        {!products ? <Skeleton kind="list" rows={4} label="Loading stock…" /> : (q || !lines.length) && (
           <ul className="transfer-picker">
             {matches.map(p => <li key={p.id}><button type="button" onClick={() => { setLines(l => [...l, { ...p, quantity: '' }]); setSearch(''); }}><span>{p.name}<small>{p.sku}</small></span><span>{p.stock_quantity} here <Plus size={14} /></span></button></li>)}
             {!matches.length && <li className="muted">{q ? 'No product with stock matches.' : 'No stock at this branch yet.'}</li>}

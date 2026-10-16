@@ -1,3 +1,4 @@
+import { Skeleton } from './Loading';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { CalendarClock, AlertTriangle, LoaderCircle, AlertCircle, X, Trash2, Plus, RefreshCw } from 'lucide-react';
@@ -99,7 +100,7 @@ function ExpiryContent({ auth }) {
         </div>
       </div>
       {error && <div className="notice" role="alert"><AlertCircle size={18} /><span>{error}</span></div>}
-      {!batches ? <div className="insights-loading"><LoaderCircle size={18} className="spin" /> Loading expiry dates…</div> : !batches.length ? (
+      {!batches ? <Skeleton kind="dashboard" rows={4} label="Loading expiry dates…" /> : !batches.length ? (
         <div className="empty"><CalendarClock size={33} /><h3>No expiry dates yet</h3><p>Add expiry dates when you receive a delivery, add stock, or create a product — or record them for stock already on the shelf.</p></div>
       ) : (
         <>
