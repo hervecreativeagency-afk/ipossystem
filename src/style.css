@@ -202,3 +202,10 @@ textarea:focus{border-color:#2e7960;box-shadow:0 0 0 3px #2e796014}
 .credit-note{background:#fbf5e8;border-radius:7px;padding:8px 10px;color:#7a5a1f!important}
 .receipt-balance{font-weight:700;border-top:1px dashed #ccd6d0;margin-top:4px;padding-top:4px}
 @media(max-width:700px){.customer-stats{grid-template-columns:1fr 1fr}.toolbar-right{gap:8px}}
+
+.picked-customer{flex-wrap:wrap}
+.picked-customer>div{flex:1;min-width:0}
+.pay-later{flex-basis:100%;display:inline-flex!important;align-items:center;justify-content:center;gap:7px;border:1px dashed #c9a75e!important;background:#fff!important;color:#7a5a1f!important;border-radius:8px!important;padding:9px 12px!important;font-weight:600;font-size:13px}
+.pay-later:hover{background:#fbf5e8!important}
+.pay-later.active{background:#fbf5e8!important;border-style:solid!important}
+.credit-hint{background:#f2f6f3;border:1px dashed #cfdcd3;border-radius:10px;padding:12px 14px;font-size:13px;color:#4a5c53;margin-bottom:16px;line-height:1.55}

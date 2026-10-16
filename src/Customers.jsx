@@ -150,7 +150,7 @@ function CustomerDetail({ auth, customerId, onClose, onChanged }) {
                 {c.notes && <p className="customer-notes">{c.notes}</p>}
               </div>
             </div>
-            {canCredit && Number(c.balance) > 0 && <PaymentForm auth={auth} customer={c} onDone={() => { load(); onChanged(); }} />}
+            {canCredit && (Number(c.balance) > 0 ? <PaymentForm auth={auth} customer={c} onDone={() => { load(); onChanged(); }} /> : <p className="credit-hint">{c.name} owes nothing right now. To give credit, pick them at checkout and tap <strong>Sell on credit</strong>. Once they owe money, you can record their payments here.</p>)}
             <div className="tabs" role="tablist">
               {canCredit && <button role="tab" aria-selected={tab === 'account'} className={tab === 'account' ? 'active' : ''} onClick={() => setTab('account')}>Account history</button>}
               <button role="tab" aria-selected={tab === 'purchases'} className={tab === 'purchases' ? 'active' : ''} onClick={() => setTab('purchases')}>Purchases</button>
@@ -250,7 +250,7 @@ export function Customers({ auth }) {
 }
 
 // Checkout customer field: search saved customers by name or phone, or save a new one.
-export function CustomerPicker({ auth, customers, value, onChange, disabled, creditSelected }) {
+export function CustomerPicker({ auth, customers, value, onChange, disabled, creditSelected, onPayLater, payLaterActive }) {
   const currency = auth.membership.companies.currency;
   const [open, setOpen] = useState(false), [saving, setSaving] = useState(false), [error, setError] = useState('');
   const box = useRef(null);
@@ -283,6 +283,7 @@ export function CustomerPicker({ auth, customers, value, onChange, disabled, cre
           {creditSelected && over && <small className="net-error">At or over their credit limit</small>}
         </div>
         <button type="button" aria-label="Remove customer from sale" disabled={disabled} onClick={() => onChange({ name: '', phone: '' })}><X size={16} /></button>
+        {onPayLater && <button type="button" className={'pay-later' + (payLaterActive ? ' active' : '')} disabled={disabled} onClick={onPayLater} aria-pressed={payLaterActive}><Wallet size={15} /> {payLaterActive ? 'Selling on credit' : 'Sell on credit (pay later)'}</button>}
       </div>
     );
   }
