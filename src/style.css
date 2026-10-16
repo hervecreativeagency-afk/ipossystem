@@ -380,3 +380,37 @@ label.has-scan input{padding-right:48px}
 .branch-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:1100px){.branch-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.staff-branches .customer-table td:last-child{width:46%}.staff-branches select{min-width:0;width:100%}.staff-branches .customer-table td{padding-left:8px;padding-right:8px}}
+
+/* ---- Expiry dates & variants ---- */
+.expiry-alert{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#fbefeb;border:1px solid #efcfc8;color:#7c2d24;border-radius:9px;padding:13px 15px;margin:0 0 20px;font-size:13px;line-height:1.5}
+.expiry-alert span{flex:1;min-width:200px}
+.expiry-alert a{font-weight:700;color:#7c2d24;text-decoration:underline}
+.expiry-section{margin-bottom:16px}
+.expiry-section h2{display:flex;align-items:center;gap:8px;font-size:15px}
+.expiry-section .badge{margin:0!important}
+.expiry-section td small{display:block}
+.expiry-section .secondary{padding:7px 11px;font-size:12px}
+.receive-expiry{display:grid;gap:8px;border:1px solid #e0e7e1;border-radius:9px;padding:12px;background:#f6faf7}
+.receive-expiry strong{font-size:13px}
+.receive-expiry label{display:grid;grid-template-columns:1fr 160px;gap:10px;align-items:center;font-weight:500}
+.receive-expiry label input{margin:0;padding:8px 10px}
+@media(max-width:520px){.receive-expiry label{grid-template-columns:1fr}}
+.variant-modal{width:min(760px,100%)}
+.variant-modal .modal-head h2{display:flex;align-items:center;gap:8px}
+.variant-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.variant-grid .span-2{grid-column:1/-1}
+.variant-grid p{margin:0}
+@media(max-width:560px){.variant-grid{grid-template-columns:1fr}}
+.variant-table{width:100%;border-collapse:collapse;font-size:13px}
+.variant-table th{text-align:left;font-size:11px;color:#7b8982;font-weight:600;padding:8px 6px;border-bottom:1px solid #e0e7e1;white-space:nowrap}
+.variant-table td{padding:6px;border-bottom:1px solid #eef2ef;vertical-align:middle}
+.variant-table input{margin:0;padding:8px 9px;min-width:90px}
+.variant-card small{color:#24694f;font-weight:600}
+.variant-picker ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.variant-picker li button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid #e0e7e1;border-radius:10px;padding:12px 14px;background:#fff}
+.variant-picker li button:hover:not(:disabled){border-color:#24694f;background:#f6faf7}
+.variant-picker li button>span:first-child{flex:1}
+.variant-picker strong{display:block;font-size:15px}
+.variant-price{text-align:right;font-weight:700;white-space:nowrap}
+.variant-price small{display:block;font-weight:500}
+.variant-count{min-width:30px;height:30px;border-radius:999px;background:#24694f;color:#fff;display:grid;place-items:center;font-weight:700}

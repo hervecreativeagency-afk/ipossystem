@@ -80,3 +80,18 @@ One product list and one set of prices; **stock is kept per branch**. Database: 
 - **Branch picker** in the top bar for people with all-branch access. Dashboard, products, sales, shifts, stock adjustments, purchase orders and the reorder list follow it. Checkout, shifts, adjustments and the reorder list need one branch.
 - **Transfers:** send (stock leaves the sending branch, shown as in transit) → receive (counted on arrival; shortfalls need a note and are recorded) or cancel (stock returns).
 - **Branches page:** combined view per branch (today, 7 days, stock units/value, low/out of stock, open shifts, staff, transfers) and branch management (directors).
+
+## Expiry dates
+
+Expiry dates are optional and can be entered when receiving a delivery, adding stock, creating a product, or afterwards for stock already on the shelf (Expiry Dates → "Add dates to shelf stock").
+
+- Dated stock is kept in `stock_batches` (per branch). Stock without a date is counted as sold first; after that the batch that expires soonest is used first.
+- Transfers carry their expiry dates to the receiving branch, and a cancelled transfer returns them.
+- The **Expiry Dates** page (directors and supervisors) groups batches into Expired, Within 7 days, Within 30 days and Later, with a one-tap write-off. The dashboard shows an alert, and checkout marks products that have expired stock.
+- Database: `supabase/expiry-variants.sql`.
+
+## Product variants (sizes, colours)
+
+Products → "Add with sizes / colours" builds every combination of up to two options (e.g. Colour × Size), each with its own SKU, barcode, price and stock. "+ Variant" adds more to an existing product, or turns a single product into variants.
+
+Each variant is an ordinary product (so stock, reports, branches and barcodes work unchanged), linked by `variant_group_id`. Checkout shows one card per product and opens a picker for the variant.
