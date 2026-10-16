@@ -1,3 +1,4 @@
+import { t as tr } from './i18n';
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
@@ -28,8 +29,8 @@ export function Toaster() {
         return (
           <div key={t.id} className={'toast toast-' + t.kind} role={t.kind === 'error' ? 'alert' : 'status'}>
             <Icon size={18} />
-            <span>{t.text}</span>
-            <button aria-label="Dismiss" onClick={() => setItems(list => list.filter(x => x.id !== t.id))}><X size={15} /></button>
+            <span>{tr(t.text)}</span>
+            <button aria-label={tr('Close')} onClick={() => setItems(list => list.filter(x => x.id !== t.id))}><X size={15} /></button>
           </div>
         );
       })}

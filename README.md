@@ -99,3 +99,9 @@ Each variant is an ordinary product (so stock, reports, branches and barcodes wo
 ## Setup guide
 
 New owners see a **setup guide** at the top of the dashboard: shop details, products, suppliers, staff, branches, first shift, a test sale and installing the app. Each step ticks itself off from the shop's real data; optional steps can be skipped ("I work alone", "I have one shop"). The guide can be hidden and is always available under **Getting Started & Help**. Supervisors and cashiers see only the steps that apply to them. Logic: `src/setup-utils.js`; component: `src/SetupGuide.jsx`.
+
+## Languages (Bemba and Nyanja)
+
+Cashier screens (checkout, choosing a size/colour, customer and credit at checkout, receipts list, shifts, offline messages, pop-ups and the menu) can be shown in **English, Ichibemba or Chinyanja**. Each person picks their language from the selector at the top of the menu or on My Profile; it is remembered on the device (works offline) and on their account.
+
+All wording is in `src/i18n.js`: English is the key and each entry has `[Bemba, Nyanja]`. To correct a translation, edit the text there; anything missing falls back to English. Receipts, invoices and reports stay in English. `tests/i18n.test.js` checks that every translated text on screen has both languages with matching `{placeholders}`.

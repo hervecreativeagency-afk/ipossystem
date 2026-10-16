@@ -439,3 +439,5 @@ label.has-scan input{padding-right:48px}
 .toast-info{background:#1f3b4d}
 @media(max-width:820px){.skeleton-stats{grid-template-columns:repeat(2,1fr)}.skeleton-row{gap:16px}}
 @media(prefers-reduced-motion:reduce){.skeleton i,.skeleton b,.skeleton-img,.skeleton-dot{animation:none}.skeleton,.app-main>*,.toast{animation:none}}
+.language-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:inherit;opacity:.9}.language-chip select{background:transparent;border:0;color:inherit;font:inherit;font-weight:600;padding:2px 0;cursor:pointer}.language-chip select option{color:#1b2b24}
+.language-field{display:grid;gap:6px;margin-top:18px;text-align:left;font-weight:600}.language-field small{font-weight:400;color:#66746c}

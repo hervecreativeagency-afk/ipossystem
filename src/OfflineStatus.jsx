@@ -1,3 +1,4 @@
+import { t as tr } from './i18n';
 import React, { useEffect, useRef, useState } from 'react';
 import { CloudOff, Cloud, RefreshCw, AlertTriangle, X, Trash2 } from 'lucide-react';
 import * as offline from './offline';
@@ -33,11 +34,11 @@ export default function OfflineStatus({ uid, companyId, checkout, money, onSynce
   const failed = queue.filter(e => e.status === 'failed');
 
   async function sync(manual = false) {
-    if (!offline.loadQueue(uid).some(e => e.status === 'pending')) { if (manual) toast('Nothing waiting to sync.', 'info'); return; }
+    if (!offline.loadQueue(uid).some(e => e.status === 'pending')) { if (manual) toast(tr('Nothing waiting to sync.'), 'info'); return; }
     const r = await offline.syncQueue(uid, checkout);
-    if (r.synced) { toast(r.synced === 1 ? '1 offline sale synced.' : r.synced + ' offline sales synced.'); onSynced?.(); }
-    if (r.failed) toast(r.failed === 1 ? '1 offline sale needs attention.' : r.failed + ' offline sales need attention.', 'error', 6000);
-    if (manual && !r.synced && !r.failed && offline.isOffline()) toast('Still offline. Sales will sync when the connection returns.', 'info');
+    if (r.synced) { toast(r.synced === 1 ? tr('1 offline sale synced.') : tr('{n} offline sales synced.', { n: r.synced })); onSynced?.(); }
+    if (r.failed) toast(r.failed === 1 ? tr('1 offline sale needs attention.') : tr('{n} offline sales need attention.', { n: r.failed }), 'error', 6000);
+    if (manual && !r.synced && !r.failed && offline.isOffline()) toast(tr('Still offline. Sales will sync when the connection returns.'), 'info');
   }
 
   useEffect(() => {
@@ -56,15 +57,15 @@ export default function OfflineStatus({ uid, companyId, checkout, money, onSynce
     return () => window.removeEventListener('keydown', close);
   }, [open]);
 
-  const label = state.offline
+  const label = tr(state.offline
     ? 'Offline'
-    : state.syncing ? 'Syncing…' : failed.length ? 'Needs attention' : pending ? 'Waiting to sync' : 'Online';
+    : state.syncing ? 'Syncing…' : failed.length ? 'Needs attention' : pending ? 'Waiting to sync' : 'Online');
   const tone = state.offline ? 'offline' : failed.length ? 'failed' : pending || state.syncing ? 'pending' : 'online';
   const Icon = state.offline ? CloudOff : failed.length ? AlertTriangle : state.syncing ? RefreshCw : Cloud;
 
   return (
     <div className="net-status">
-      <button className={'net-chip net-' + tone} onClick={() => setOpen(!open)} aria-expanded={open} aria-haspopup="dialog" title="Connection and offline sales">
+      <button className={'net-chip net-' + tone} onClick={() => setOpen(!open)} aria-expanded={open} aria-haspopup="dialog" title={tr('Connection and offline sales')}>
         <Icon size={15} className={state.syncing ? 'spin' : ''} />
         <span>{label}</span>
         {queue.length > 0 && <b>{queue.length}</b>}
@@ -72,13 +73,13 @@ export default function OfflineStatus({ uid, companyId, checkout, money, onSynce
       {open && (
         <div className="net-panel" role="dialog" aria-label="Offline sales" ref={panel}>
           <div className="net-panel-head">
-            <strong>{state.offline ? 'You are offline' : 'Connected'}</strong>
+            <strong>{tr(state.offline ? 'You are offline' : 'Connected')}</strong>
             <button aria-label="Close" onClick={() => setOpen(false)}><X size={16} /></button>
           </div>
           <p className="muted">
-            {state.offline
+            {tr(state.offline
               ? 'Keep selling. Sales are saved on this device and sent automatically when the internet is back.'
-              : queue.length ? 'Sales saved on this device are sent automatically.' : 'All sales are saved to your store. Nothing is waiting on this device.'}
+              : queue.length ? 'Sales saved on this device are sent automatically.' : 'All sales are saved to your store. Nothing is waiting on this device.')}
           </p>
           {queue.length > 0 && (
             <ul className="net-list">
@@ -101,10 +102,10 @@ export default function OfflineStatus({ uid, companyId, checkout, money, onSynce
               ))}
             </ul>
           )}
-          {failed.length > 0 && <p className="net-help">A sale is rejected when stock ran out or your shift was closed before it synced. Open your shift or adjust stock, then retry.</p>}
+          {failed.length > 0 && <p className="net-help">{tr('A sale is rejected when stock ran out or your shift was closed before it synced. Open your shift or adjust stock, then retry.')}</p>}
           {queue.length > 0 && (
             <button className="primary net-sync" disabled={state.syncing} onClick={() => { offline.retryQueued(uid); sync(true); }}>
-              <RefreshCw size={15} className={state.syncing ? 'spin' : ''} /> {state.syncing ? 'Syncing…' : 'Sync now'}
+              <RefreshCw size={15} className={state.syncing ? 'spin' : ''} /> {tr(state.syncing ? 'Syncing…' : 'Sync now')}
             </button>
           )}
         </div>

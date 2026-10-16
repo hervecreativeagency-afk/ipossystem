@@ -1,3 +1,4 @@
+import { t as tr } from './i18n';
 import React, { useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 
@@ -19,15 +20,15 @@ export default function VariantPicker({ group, cart, money, currency, expired, o
             return (
               <li key={v.id}>
                 <button disabled={left <= 0} onClick={() => onAdd(v)}>
-                  <span><strong>{v.variant_label || v.name}</strong><small>{v.sku}{expired.has(v.id) ? ' · has expired stock' : ''}</small></span>
-                  <span className="variant-price">{money(v.selling_price, currency)}<small>{left <= 0 ? (n ? 'all in cart' : 'out of stock') : `${left} left`}</small></span>
+                  <span><strong>{v.variant_label || v.name}</strong><small>{v.sku}{expired.has(v.id) ? ' · ' + tr('has expired stock') : ''}</small></span>
+                  <span className="variant-price">{money(v.selling_price, currency)}<small>{left <= 0 ? tr(n ? 'all in cart' : 'out of stock') : tr('{n} left', { n: left })}</small></span>
                   {n > 0 ? <span className="variant-count">{n}</span> : <span className="add-circle"><Plus size={16} /></span>}
                 </button>
               </li>
             );
           })}
         </ul>
-        <div className="modal-actions"><button className="primary" onClick={onClose}>Done</button></div>
+        <div className="modal-actions"><button className="primary" onClick={onClose}>{tr('Done')}</button></div>
       </div>
     </div>
   );
