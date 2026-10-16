@@ -123,3 +123,9 @@ Everything is worked out in the app from the shop's own data (`src/assistant-uti
 Each device can use **Light**, **Dark** or **Match this device** (sidebar button, or My Profile → Appearance). The choice is stored on the device and applied before the page draws, so there is no white flash.
 
 `src/dark.css` is generated from `src/style.css` by `scripts/make-dark-css.py` (needs `pip install tinycss2`): every rule that sets a colour is repeated for dark mode with light surfaces turned dark and dark text turned light; green buttons, the toasts and other dark/brand surfaces keep their colours; receipts keep their white paper look and printing is unaffected. **After changing colours in style.css, run `python3 scripts/make-dark-css.py`.**
+
+## Smart reordering and the home dashboard
+
+**Run-out forecast** (`src/forecast-utils.js`): each product's selling speed blends the last 7 days with the whole period (recent days count more), so a product that suddenly sells faster is caught early. From it: days of stock left, the run-out date, an "order by" date (2 days for delivery), and a suggested quantity for the chosen cover period minus anything already on order. Shown as sentences on the Reorder list ("You'll run out of Sugar 2kg in about 4 days (Tue 20 Oct). Order 55 by Sun 18 Oct") and as a compact card on the dashboard. The Reorder list's suggested quantities use the same speed.
+
+**Home dashboard**: four tiles with small trend lines (today's sales and number of sales vs the same day last week, average sale, items running out), this week against last week as a chart, the run-out card, best sellers, sales by hour today against a usual day, and how customers pay as a ring chart. Each chart keeps a table or text alternative for screen readers.

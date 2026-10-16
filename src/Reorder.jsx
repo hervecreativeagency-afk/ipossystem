@@ -4,6 +4,8 @@ import { PackageX, RefreshCw, LoaderCircle, AlertCircle, ShoppingBag, MessageCir
 import * as api from './api';
 import { list, rpc } from './operations';
 import { toast } from './Toast';
+import { forecast, runningOut } from './forecast-utils';
+import { RunOutPanel } from './RunOut';
 import { buildReorderList, groupBySupplier, purchaseItems, poNumber, purchaseOrderText } from './reorder-utils';
 import { normalizePhone, whatsappUrl } from './receipt-share';
 import { ALL, branchName } from './branches';
@@ -42,13 +44,20 @@ function ReorderContent({ auth }) {
       ]);
       // Orders still open for another branch don't count as "on order" here, but still tell us the usual supplier.
       const here = orders.map(o => o.branch_id && auth.branchId && o.branch_id !== auth.branchId && o.status === 'ordered' ? { ...o, status: 'elsewhere' } : o);
-      setData({ products, suppliers: suppliers.filter(s => s.active), orders: here, saleItems: activity.items });
+      setData({ products, suppliers: suppliers.filter(s => s.active), orders: here, saleItems: activity.items, sales: activity.sales });
     } catch (e) { setError(msg(e)); }
     finally { setLoading(false); }
   }
   useEffect(() => { load(); }, [m.company_id]);
 
-  const rows = useMemo(() => data ? buildReorderList({ products: data.products, saleItems: data.saleItems, orders: data.orders, coverDays: cover }) : [], [data, cover]);
+  const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Africa/Lusaka' }).format(new Date());
+  const predicted = useMemo(() => {
+    if (!data) return [];
+    const onOrder = new Map();
+    for (const o of data.orders) if (o.status === 'ordered') for (const it of o.items || []) onOrder.set(it.product_id, (onOrder.get(it.product_id) || 0) + Number(it.quantity || 0));
+    return forecast({ products: data.products, sales: data.sales, items: data.saleItems, today, days: 30, onOrder, coverDays: cover });
+  }, [data, cover, today]);
+  const rows = useMemo(() => data ? buildReorderList({ products: data.products, saleItems: data.saleItems, orders: data.orders, coverDays: cover, rates: new Map(predicted.map(r => [r.product_id, r.perDay])) }) : [], [data, cover, predicted]);
 
   // Fresh suggestions whenever the list or cover period changes; keeps edits the user made to other fields.
   useEffect(() => {
@@ -108,6 +117,7 @@ function ReorderContent({ auth }) {
         </div>
       </div>
       {error && <div className="notice" role="alert"><AlertCircle size={18} /><span>{error}</span></div>}
+      {data && <RunOutPanel rows={runningOut(predicted)} today={today} />}
 
       {created.map(po => (
         <div key={po.id} className="reorder-created" role="status">
