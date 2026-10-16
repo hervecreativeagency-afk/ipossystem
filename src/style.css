@@ -505,3 +505,5 @@ label.has-scan input{padding-right:48px}
 
 .dash-grid>.insight-card,.dash-grid .insight-wide{grid-column:auto;min-width:0}.dash-grid .week-chart svg{max-height:250px}.hour-chart text{font-size:11px}
 .kpi .delta{white-space:nowrap}.kpi.has-spark .kpi-foot{max-width:64%}.spark{width:34%}
+.feedback-modal{max-width:520px}.feedback-modal>p{margin:0 0 14px}.feedback-modal label{display:grid;gap:6px;font-weight:600}.feedback-modal textarea{font:inherit;padding:10px 12px;border-radius:8px;resize:vertical}
+.feedback-faces{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}.feedback-faces button{display:inline-flex;gap:6px;align-items:center;border:1px solid #dce4df;border-radius:20px;padding:7px 13px;background:#fff;cursor:pointer;font-size:13px}.feedback-faces button span{font-size:17px}.feedback-faces button.active{border-color:#24694f;background:#eef6f1;color:#1d4d3b;font-weight:600}
