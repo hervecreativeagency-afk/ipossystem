@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, X, RefreshCw, LoaderCircle, AlertCircle, Users, Wallet, Phone, Pencil, Receipt } from 'lucide-react';
+import { Search, Plus, X, RefreshCw, LoaderCircle, AlertCircle, Users, Wallet, Phone, Pencil, Receipt, Megaphone, Download } from 'lucide-react';
 import * as api from './api';
 import { paymentMethods } from './totals';
 import { toast } from './Toast';
 import { downloadCSV } from './operation-utils';
 import * as offline from './offline';
+import { contactsCsv } from './receipt-share';
 
 const money = (n, c) => new Intl.NumberFormat('en-ZM', { style: 'currency', currency: c || 'ZMW' }).format(Number(n || 0));
 const msg = e => e?.message || 'Something went wrong. Please try again.';
@@ -189,12 +190,29 @@ function CustomerDetail({ auth, customerId, onClose, onChanged }) {
 export function Customers({ auth }) {
   const m = auth.membership, currency = m.companies.currency;
   const customers = useCustomers(auth);
-  const [search, setSearch] = useState(''), [owingOnly, setOwingOnly] = useState(false), [adding, setAdding] = useState(false), [open, setOpen] = useState(null);
+  const [search, setSearch] = useState(''), [owingOnly, setOwingOnly] = useState(false), [offersOnly, setOffersOnly] = useState(false), [adding, setAdding] = useState(false), [open, setOpen] = useState(null);
   const list = useMemo(() => {
     const q = search.trim().toLowerCase(), digits = q.replace(/\D/g, '');
-    return customers.rows.filter(c => (!owingOnly || Number(c.balance) > 0) &&
+    return customers.rows.filter(c => (!owingOnly || Number(c.balance) > 0) && (!offersOnly || c.marketing_opt_in) &&
       (!q || c.name.toLowerCase().includes(q) || (digits.length >= 3 && (c.phone || '').replace(/\D/g, '').includes(digits))));
-  }, [customers.rows, search, owingOnly]);
+  }, [customers.rows, search, owingOnly, offersOnly]);
+  const offers = customers.rows.filter(c => c.marketing_opt_in);
+  async function toggleOffers(c) {
+    const on = !c.marketing_opt_in;
+    if (on && !window.confirm(`Has ${c.name} agreed to receive offers and news from ${m.companies.name}?`)) return;
+    try {
+      await api.setCustomerMarketing(m.company_id, c.id, on);
+      customers.setRows(rows => rows.map(x => x.id === c.id ? { ...x, marketing_opt_in: on, marketing_opt_in_at: on ? new Date().toISOString() : null } : x));
+      toast(on ? `${c.name} will receive offers.` : `${c.name} will no longer receive offers.`);
+    } catch (e) { toast(msg(e), 'error'); }
+  }
+  function exportOffers() {
+    if (!offers.length) { toast('No customers have agreed to receive offers yet. Tick the box when sending a receipt.', 'info'); return; }
+    const blob = new Blob(['\ufeff' + contactsCsv(customers.rows)], { type: 'text/csv;charset=utf-8' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'ipos-offers-contacts.csv' });
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    toast(`${offers.length} ${offers.length === 1 ? 'contact' : 'contacts'} exported.`);
+  }
   const owing = customers.rows.filter(c => Number(c.balance) > 0);
   const totalOwed = owing.reduce((n, c) => n + Number(c.balance), 0);
   const over = customers.rows.filter(c => c.credit_limit != null && Number(c.balance) > Number(c.credit_limit));
@@ -204,6 +222,7 @@ export function Customers({ auth }) {
         <div><span className="eyebrow">STORE WORKSPACE</span><h1>Customers</h1><p>Your regular customers, what they buy and what they owe.</p></div>
         <div className="heading-actions">
           {m.role !== 'cashier' && <button className="secondary" onClick={() => downloadCSV('ipos-customers.csv', [['Name', 'Phone', 'Email', 'Owes', 'Credit limit'], ...customers.rows.map(c => [c.name, c.phone || '', c.email || '', c.balance, c.credit_limit ?? ''])])}>Export</button>}
+          {m.role !== 'cashier' && <button className="secondary" onClick={exportOffers} title="Customers who agreed to receive offers"><Download size={16} /> Offers list</button>}
           <button className="primary" onClick={() => setAdding(true)}><Plus size={18} /> Add customer</button>
         </div>
       </div>
@@ -212,19 +231,21 @@ export function Customers({ auth }) {
         <div className="stat-card"><div>Customers<Users size={19} /></div><strong>{customers.rows.length}</strong><small>Saved in your store</small></div>
         <div className="stat-card"><div>Customers owe you<Wallet size={19} /></div><strong>{money(totalOwed, currency)}</strong><small>{owing.length} {owing.length === 1 ? 'customer' : 'customers'} with a balance</small></div>
         {over.length > 0 && <div className="stat-card warn"><div>Over their limit<AlertCircle size={19} /></div><strong>{over.length}</strong><small>Check before giving more credit</small></div>}
+        <div className="stat-card"><div>Get offers<Megaphone size={19} /></div><strong>{offers.length}</strong><small>Agreed to offers and news</small></div>
       </div>
       <div className="table-panel">
         <div className="table-toolbar">
           <div className="search-box"><Search size={18} /><input placeholder="Search by name or phone…" aria-label="Search customers" value={search} onChange={e => setSearch(e.target.value)} /></div>
           <div className="toolbar-right">
             <label className="checkbox-label inline"><input type="checkbox" checked={owingOnly} onChange={e => setOwingOnly(e.target.checked)} /> Owing only</label>
+            <label className="checkbox-label inline"><input type="checkbox" checked={offersOnly} onChange={e => setOffersOnly(e.target.checked)} /> Gets offers</label>
             <button className="icon-button" aria-label="Refresh customers" onClick={customers.reload}><RefreshCw size={18} /></button>
           </div>
         </div>
         {customers.loading ? <div className="insights-loading"><LoaderCircle size={18} className="spin" /> Loading customers…</div> : list.length ? (
           <div className="table-scroll">
             <table className="customer-table">
-              <thead><tr><th>Name</th><th>Phone</th><th>Owes</th><th>Credit limit</th><th></th></tr></thead>
+              <thead><tr><th>Name</th><th>Phone</th><th>Owes</th><th>Credit limit</th><th>Offers</th><th></th></tr></thead>
               <tbody>
                 {list.map(c => (
                   <tr key={c.id} onClick={() => setOpen(c.id)} className="clickable">
@@ -232,6 +253,7 @@ export function Customers({ auth }) {
                     <td>{c.phone || '—'}</td>
                     <td>{Number(c.balance) > 0 ? <span className={'badge ' + (c.credit_limit != null && Number(c.balance) > Number(c.credit_limit) ? 'red' : 'amber')}>{money(c.balance, currency)}</span> : <span className="muted-inline">—</span>}</td>
                     <td>{c.credit_limit == null ? <span className="muted-inline">No limit</span> : money(c.credit_limit, currency)}</td>
+                    <td><button className={'offer-toggle' + (c.marketing_opt_in ? ' is-on' : '')} aria-pressed={Boolean(c.marketing_opt_in)} disabled={!c.phone && !c.marketing_opt_in} title={c.phone ? (c.marketing_opt_in ? 'Stop sending offers' : 'Customer agreed to offers') : 'Add a phone number first'} onClick={e => { e.stopPropagation(); toggleOffers(c); }}><Megaphone size={14} />{c.marketing_opt_in ? 'Yes' : 'No'}</button></td>
                     <td><button className="link-button" onClick={e => { e.stopPropagation(); setOpen(c.id); }}>View</button></td>
                   </tr>
                 ))}
@@ -239,7 +261,7 @@ export function Customers({ auth }) {
             </table>
           </div>
         ) : (
-          <div className="empty"><Users size={33} /><h3>{search || owingOnly ? 'No customers match' : 'No customers yet'}</h3><p>{search || owingOnly ? 'Try a different name or phone number.' : 'Add customers here or while making a sale.'}</p></div>
+          <div className="empty"><Users size={33} /><h3>{search || owingOnly || offersOnly ? 'No customers match' : 'No customers yet'}</h3><p>{search || owingOnly || offersOnly ? 'Try a different name or phone number.' : 'Add customers here or while making a sale.'}</p></div>
         )}
       </div>
       <p className="muted">Credit sales are made at <Link to="/pos">checkout</Link> by a director or supervisor. Customer payments are recorded here and appear in the Cashbook.</p>

@@ -260,3 +260,21 @@ label.has-scan input{padding-right:48px}
 .verify-next{margin:0 0 22px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#33463d}
 .verify-next li{display:flex;gap:10px;align-items:flex-start;line-height:1.5}
 .verify-next li:before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:#24694f;margin-top:7px}
+
+/* ---- Send receipt by WhatsApp / SMS ---- */
+.share-receipt{margin-top:18px;border:1px solid #dce7df;background:#f6faf7;border-radius:11px;padding:14px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.share-head strong{display:block;font-size:14px}
+.share-head small{margin-top:2px}
+.share-phone input{font-size:16px;margin-top:6px}
+.share-hint{margin-top:-4px}
+.share-optin{display:flex;gap:9px;align-items:flex-start;font-size:13px;font-weight:500;line-height:1.45;color:#33463d;margin:0}
+.share-optin input{width:18px;height:18px;margin:1px 0 0;flex:none;accent-color:#24694f}
+.share-optin.is-on{color:#24694f;font-weight:600;align-items:center}
+.share-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.share-buttons button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:8px;padding:12px 14px;font-weight:600;font-size:14px}
+.share-wa{background:#1f8a4c;color:#fff}
+.share-wa:hover{background:#18723e}
+@media print{.share-receipt{display:none!important}}
+.offer-toggle{display:inline-flex;align-items:center;gap:5px;border:1px solid #dce4df;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;color:#7b8982;background:#fff}
+.offer-toggle.is-on{background:#edf5ee;border-color:#cfe3d5;color:#24694f}
+.offer-toggle:hover:not(:disabled){border-color:#24694f}
