@@ -49,3 +49,13 @@ After confirming, new directors land on `/account/register/success`, which waits
 2. Authentication → URL Configuration → Redirect URLs: add `https://ipossystem.vercel.app/**`.
 
 Until the template is changed, the default Supabase link still works: it now returns to `/account/register/success`.
+
+## WhatsApp / SMS receipts and the offers list
+
+Every receipt has **Send receipt to phone**: type or confirm the customer's number and tap **WhatsApp** or **SMS**. The message opens on the shop's own phone with the receipt filled in; one more tap sends it. No paid service is used.
+
+- Numbers are normalised to Zambia by default (`0977 123 456`, `977123456`, `+260…` are the same customer).
+- Sending saves the number as a customer and links the sale (`record_receipt_share`, `supabase/receipt-sharing.sql`, applied).
+- Customers join the **offers list** only when staff tick that they agreed (Data Protection Act 2021). Date and staff member are recorded; opting out is on the Customers page.
+- Customers → **Offers list** exports only customers who agreed (CSV, spreadsheet-safe).
+- Automatic sending without a tap needs a paid WhatsApp Business API or SMS provider; not included.
