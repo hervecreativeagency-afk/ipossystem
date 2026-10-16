@@ -105,3 +105,9 @@ New owners see a **setup guide** at the top of the dashboard: shop details, prod
 Cashier screens (checkout, choosing a size/colour, customer and credit at checkout, receipts list, shifts, offline messages, pop-ups and the menu) can be shown in **English, Ichibemba or Chinyanja**. Each person picks their language from the selector at the top of the menu or on My Profile; it is remembered on the device (works offline) and on their account.
 
 All wording is in `src/i18n.js`: English is the key and each entry has `[Bemba, Nyanja]`. To correct a translation, edit the text there; anything missing falls back to English. Receipts, invoices and reports stay in English. `tests/i18n.test.js` checks that every translated text on screen has both languages with matching `{placeholders}`.
+
+## Checks (mistake & fraud flags)
+
+Directors get a **Checks** page (Management → Checks) and a dashboard notice when something needs a second look: drawers short or over at close, the same cashier short repeatedly, refunds soon after or long after a sale, many refunds on one cashier's sales, big discounts, items sold well below their price, late-night sales, stock repeatedly adjusted out as missing/damaged, and large cash withdrawals. A flag is a reason to look, not proof of wrongdoing.
+
+Each flag can be marked **Looks fine** (with a note) or **Looking into it**, and reopened. Rules and thresholds live in `src/flag-utils.js` (`RULES`); decisions are stored in `flag_reviews` (`supabase/flag-reviews.sql`), readable and writable by directors only.
