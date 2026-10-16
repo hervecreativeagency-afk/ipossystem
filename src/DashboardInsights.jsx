@@ -7,15 +7,15 @@ import { dailySeries, topProducts, paymentMix, lowStock, changeVsPrevious } from
 
 const dayLabel = (iso, short = true) => new Date(iso + 'T12:00:00+02:00').toLocaleDateString('en-GB', short ? { weekday: 'short' } : { weekday: 'long', day: 'numeric', month: 'short' });
 
-function useActivity(m, uid) {
+function useActivity(m, uid, branchId) {
   const [state, setState] = useState({ loading: true, data: null, error: '', stale: null });
   const seq = useRef(0);
   async function load() {
     const n = ++seq.current;
-    const key = offline.cacheKey(uid, m.company_id, 'activity7:' + m.role);
+    const key = offline.cacheKey(uid, m.company_id, 'activity7:' + m.role + ':' + (branchId || 'none'));
     setState(s => ({ ...s, loading: true, error: '' }));
     try {
-      const data = await api.loadRecentActivity(m.company_id, uid, m.role, 7);
+      const data = await api.loadRecentActivity(m.company_id, uid, m.role, 7, branchId);
       offline.saveCache(key, data);
       if (n === seq.current) setState({ loading: false, data, error: '', stale: null });
     } catch (e) {
@@ -24,8 +24,8 @@ function useActivity(m, uid) {
       setState(cached ? { loading: false, data: cached.data, error: '', stale: cached.savedAt } : { loading: false, data: null, error: e.message || 'Could not load sales insights.', stale: null });
     }
   }
-  useEffect(() => { load(); return () => { seq.current++; }; }, [m.company_id, uid, m.role]);
-  useEffect(() => offline.subscribe(ev => { if (ev.type === 'sync-end' && ev.synced) load(); }), [m.company_id, uid, m.role]);
+  useEffect(() => { load(); return () => { seq.current++; }; }, [m.company_id, uid, m.role, branchId]);
+  useEffect(() => offline.subscribe(ev => { if (ev.type === 'sync-end' && ev.synced) load(); }), [m.company_id, uid, m.role, branchId]);
   return state;
 }
 
@@ -92,7 +92,7 @@ function BarList({ rows, money, currency, value, detail }) {
 
 export function DashboardInsights({ auth, products, money }) {
   const m = auth.membership, currency = m.companies.currency;
-  const { loading, data, error, stale } = useActivity(m, auth.session.user.id);
+  const { loading, data, error, stale } = useActivity(m, auth.session.user.id, auth.branchId);
   const [showTable, setShowTable] = useState(false);
   const low = lowStock(products);
   if (loading && !data) return <div className="insights-loading" role="status"><LoaderCircle size={18} className="spin" /> Loading sales insights…</div>;

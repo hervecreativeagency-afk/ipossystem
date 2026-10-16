@@ -68,3 +68,15 @@ Every receipt has **Send receipt to phone**: type or confirm the customer's numb
 - Supplier and unit cost default to the product's most recent purchase (else the saved product cost); all editable.
 - Lines are grouped by supplier; **Create purchase order** makes one order per supplier with the existing `create_purchase` function (retry-safe), then **Send to supplier** opens WhatsApp with the order.
 - Receive deliveries in Suppliers & Purchases as before. No database changes.
+
+## Branches
+
+One product list and one set of prices; **stock is kept per branch**. Database: `supabase/branches.sql` (applied).
+
+- Every stock change already writes a `stock_movements` row; a trigger applies it to the right branch in `branch_stock` and stops a branch going below zero. `products.stock_quantity` stays the company total (stock in transit is not counted).
+- Which branch: sales → the cashier's open shift; refunds → the sale's branch; purchase deliveries → the order's branch; other actions → the branch chosen in the app (`*_at` functions), else the user's home branch, else the main branch.
+- Existing stock, sales, shifts, adjustments and purchase orders were assigned to **Main shop**. Cashiers and supervisors start at Main shop; directors see all branches.
+- **Staff:** cashiers belong to one branch; directors and supervisors can be given one branch or all (Branches → Who works where).
+- **Branch picker** in the top bar for people with all-branch access. Dashboard, products, sales, shifts, stock adjustments, purchase orders and the reorder list follow it. Checkout, shifts, adjustments and the reorder list need one branch.
+- **Transfers:** send (stock leaves the sending branch, shown as in transit) → receive (counted on arrival; shortfalls need a note and are recorded) or cancel (stock returns).
+- **Branches page:** combined view per branch (today, 7 days, stock units/value, low/out of stock, open shifts, staff, transfers) and branch management (directors).
